@@ -389,58 +389,58 @@ namespace CSharp_05_Hak.ViewModels.TaskList
 
         private async void ShowThreadsImplementation(object obj)
         {
-                StringBuilder sb = new StringBuilder();
-            await Task.Run(() =>
+            StringBuilder sb = new StringBuilder();
+            try
             {
-                sb.Append("ID                ThreadState           PriorityLevel                           StartTime\n");
-                try
+                await Task.Run(() =>
                 {
+                    sb.Append("ID                ThreadState           PriorityLevel                           StartTime\n");
                     foreach (ProcessThread thread in SelectedProcess.ThreadsCollection)
                     {
                         sb.Append(thread.Id.ToString() + "               " + thread.ThreadState.ToString() + "                   " +
-                            thread.PriorityLevel.ToString() + "                  " + thread.StartTime.ToString() + '\n');
+                        thread.PriorityLevel.ToString() + "                  " + thread.StartTime.ToString() + '\n');
                     }
-                }
-                catch (System.ComponentModel.Win32Exception e)
-                {
-                    MessageBox.Show("Win32 Access denied", "Error");
-                    return;
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("Access denied", "Error");
-                    return;
-                }
-            });
-                MessageBox.Show(sb.ToString(), "Threads");
+                });
+            }
+            catch (System.ComponentModel.Win32Exception e)
+            {
+                MessageBox.Show("Win32 Access denied", "Error");
+                return;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Access denied", "Error");
+                return;
+            }
+            MessageBox.Show(sb.ToString(), "Threads");
         }
 
         private async void ShowModulesImplementation(object obj)
         {
-                StringBuilder sb = new StringBuilder();
-            await Task.Run(() =>
+            StringBuilder sb = new StringBuilder();
+            try
             {
-                sb.Append("ModuleName                                                                FileName\n");
-                try
+                await Task.Run(() =>
                 {
+                    sb.Append("ModuleName                                                                FileName\n");
                     foreach (ProcessModule module in SelectedProcess.Modules)
                     {
                         sb.Append(module.ModuleName.ToString() + "                                                   " +
-                            module.FileName.ToString() + '\n');
+                        module.FileName.ToString() + '\n');
                     }
-                }
-                catch (System.ComponentModel.Win32Exception e)
-                {
-                    MessageBox.Show("Win32 Cannot access", "Error");
-                    return;
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("Cannot access", "Error");
-                    return;
-                }
-            });
-                MessageBox.Show( sb.ToString(), "Modules");
+                });
+            }
+            catch (System.ComponentModel.Win32Exception e)
+            {
+                MessageBox.Show("Win32 Cannot access", "Error");
+                return;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Cannot access", "Error");
+                return;
+            }
+            MessageBox.Show(sb.ToString(), "Modules");
         }
 
         private void OpenFolderImplementation(object obj)
