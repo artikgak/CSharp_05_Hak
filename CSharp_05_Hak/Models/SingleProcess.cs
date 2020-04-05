@@ -89,6 +89,7 @@ namespace CSharp_05_Hak.Models
         {
             get
             {
+
                 return _process.Modules;
             }
         }

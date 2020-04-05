@@ -141,14 +141,14 @@ namespace CSharp_05_Hak.ViewModels.TaskList
             }
         }
 
-        //public RelayCommand<object> ShowModules
-        //{
-        //    get
-        //    {
-        //        return _showModules ?? (_showModules = new RelayCommand<object>(
-        //                   ShowModulesImplementation, o => CanExecuteCommand()));
-        //    }
-        //}
+        public RelayCommand<object> ShowModules
+        {
+            get
+            {
+                return _showModules ?? (_showModules = new RelayCommand<object>(
+                           ShowModulesImplementation, o => CanExecuteCommand()));
+            }
+        }
 
         public RelayCommand<object> SortById
         {
@@ -390,7 +390,7 @@ namespace CSharp_05_Hak.ViewModels.TaskList
             await Task.Run(() =>
             {
                 StringBuilder sb = new StringBuilder();
-                sb.Append("ID                   ThreadState             PriorityLevel                           StartTime\n");
+                sb.Append("ID                ThreadState           PriorityLevel                           StartTime\n");
                 foreach (ProcessThread thread in SelectedProcess.ThreadsCollection)
                 {
                     sb.Append(thread.Id.ToString()+ "               " + thread.ThreadState.ToString() + "                   " + 
@@ -399,6 +399,24 @@ namespace CSharp_05_Hak.ViewModels.TaskList
 
 
                     MessageBox.Show(sb.ToString());
+
+            });
+        }
+
+        private async void ShowModulesImplementation(object obj)
+        {
+            await Task.Run(() =>
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("ModuleName                                        ModuleMemorySize\n");
+                foreach (ProcessModule module in SelectedProcess.Modules)
+                {
+                    sb.Append(module.ModuleName.ToString() + "                                                   " +
+                        module.ModuleMemorySize.ToString()+'\n');
+                }
+
+
+                MessageBox.Show(sb.ToString());
 
             });
         }
