@@ -409,13 +409,18 @@ namespace CSharp_05_Hak.ViewModels.TaskList
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append("ModuleName                                        ModuleMemorySize\n");
+                try
+                {
                 foreach (ProcessModule module in SelectedProcess.Modules)
                 {
                     sb.Append(module.ModuleName.ToString() + "                                                   " +
                         module.ModuleMemorySize.ToString()+'\n');
                 }
-
-
+                }catch(Exception e)
+                {
+                    MessageBox.Show("Cannot access");
+                    return;
+                }
                 MessageBox.Show(sb.ToString());
 
             });
