@@ -13,7 +13,7 @@ namespace CSharp_05_Hak.Views
         public TaskListView()
         {
             InitializeComponent();
-            StationManager.Instance.Initialize();
+            //StationManager.Instance.Initialize();
             DataContext = new TaskListViewModel();
         }
     }

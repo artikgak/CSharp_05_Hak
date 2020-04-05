@@ -6,5 +6,6 @@ namespace CSharp_05_Hak.ViewModels.TaskList
 {
     internal class ThreadsViewModel: BaseViewModel
     {
+
     }
 }
