@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading;
@@ -13,16 +14,23 @@ namespace CSharp_05_Hak.ViewModels.TaskList
         
         private SingleProcess _selectedProcess;
 
-        private Thread _listThread;
+        private Thread _threadUpdateProccesses;
 
         #region Properties
 
         internal TaskListViewModel()
         {
             Process[] pr = Process.GetProcesses();
-            _processes = new SingleProcess[pr.Length];
+            _processes = new ObservableCollection<SingleProcess>();
             for (int i = 0; i < pr.Length; ++i)
-                _processes[i] = new SingleProcess(pr[i]);
+                _processes.Add(new SingleProcess(pr[i]));
+            //StartWorkingThread();
+            System.Timers.Timer updateProcessParamsTimer = new System.Timers.Timer(); //Таймер обновления
+            updateProcessParamsTimer.Elapsed +=
+                (sender, eventArgs) => UpdateProccesses(sender, eventArgs);
+            updateProcessParamsTimer.Interval = 1000;
+            updateProcessParamsTimer.Enabled = true;
+            updateProcessParamsTimer.Start();
         }
 
         public SingleProcess SelectedProcess
@@ -37,6 +45,16 @@ namespace CSharp_05_Hak.ViewModels.TaskList
             }
         }
 
+        private void UpdateProccesses(object sender, EventArgs timerArguments)
+        {
+            Process[] pr = Process.GetProcesses();
+            ObservableCollection <SingleProcess> toSet = new ObservableCollection<SingleProcess>();
+            for (int i = 0; i < pr.Length; ++i)
+                toSet.Add(new SingleProcess(pr[i]));
+            Processes = toSet;
+            //Thread.Sleep(1000);
+        }
+
         public ObservableCollection<SingleProcess> Processes
         {
             get { return _processes; }
@@ -47,5 +65,11 @@ namespace CSharp_05_Hak.ViewModels.TaskList
             }
         }
         #endregion
+
+        //private void StartWorkingThread()
+        //{
+        //    _threadUpdateProccesses = new Thread(UpdateProccesses);
+        //    _threadUpdateProccesses.Start();
+        //}
     }
 }
