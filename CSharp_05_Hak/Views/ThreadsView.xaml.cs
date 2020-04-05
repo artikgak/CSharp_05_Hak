@@ -1,28 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using CSharp_05_Hak.Tools.Navigation;
+using CSharp_05_Hak.ViewModels.TaskList;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 
 namespace CSharp_05_Hak.Views
 {
     /// <summary>
     /// Interaction logic for ThreadsView.xaml
     /// </summary>
-    public partial class ThreadsView : UserControl
+    public partial class ThreadsView : UserControl, INavigatable
     {
         public ThreadsView()
         {
             InitializeComponent();
+            DataContext = new ThreadsViewModel();
         }
     }
 }

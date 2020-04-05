@@ -64,8 +64,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\SingleProcess.cs" />
     <Compile Include="Tools\BaseViewModel.cs" />
     <Compile Include="Tools\MVVM\RelayCommands.cs" />
+    <Compile Include="Tools\Managers\NavigationManager.cs" />
+    <Compile Include="Tools\Managers\StationManager.cs" />
+    <Compile Include="Tools\Navigation\BaseNavigationModel.cs" />
+    <Compile Include="Tools\Navigation\IContentOwner.cs" />
+    <Compile Include="Tools\Navigation\INavigateble.cs" />
+    <Compile Include="Tools\Navigation\INavigationModel.cs" />
+    <Compile Include="Tools\Navigation\InitializationNavigationModel.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\TaskList\TaskListViewModel.cs" />
+    <Compile Include="ViewModels\TaskList\ModulesViewModel.cs" />
+    <Compile Include="ViewModels\TaskList\ThreadsViewModel.cs" />
     <Compile Include="Views\ModulesView.xaml.cs">
       <DependentUpon>ModulesView.xaml</DependentUpon>
     </Compile>
@@ -127,9 +139,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

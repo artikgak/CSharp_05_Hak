@@ -6,14 +6,14 @@
              xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
              xmlns:local="clr-namespace:CSharp_05_Hak.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="900">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="40"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="50"></RowDefinition>
-            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -22,17 +22,20 @@
         </Grid.ColumnDefinitions>
         <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" 
                Content="Task Manager" FontSize="20" FontWeight="Bold"></Label>
-        <DataGrid SelectionMode="Single" SelectedItem="{Binding SelectedPerson}" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" dgx:DataGridFilter.IsAutoFilterEnabled="True" ItemsSource="{Binding Persons, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" ScrollViewer.CanContentScroll="True">
+        <DataGrid SelectionMode="Single" SelectedItem="{Binding SelectedProcess}" 
+                  Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" dgx:DataGridFilter.IsAutoFilterEnabled="True" 
+                  ItemsSource="{Binding Processes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                  AutoGenerateColumns="False" ScrollViewer.CanContentScroll="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Width="100" CanUserSort="True" Binding="{Binding Name, Mode=OneWay}"></DataGridTextColumn>
-                <DataGridTextColumn Header="ID" Width="50" Binding="{Binding Surname, Mode=OneWay}"></DataGridTextColumn>
-                <DataGridCheckBoxColumn Header="IsActive" Width="70" Binding="{Binding IsBirthday, Mode=OneWay}"></DataGridCheckBoxColumn>
-                <DataGridTextColumn Header="RAM %" Width="80" Binding="{Binding Email, Mode=OneWay}"></DataGridTextColumn>
-                <DataGridTextColumn Header="CPU %" Width="80" Binding="{Binding ChineseSign, Mode=OneWay}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Threads" Width="95" Binding="{Binding SunSign, Mode=OneWay}"></DataGridTextColumn>
-                <DataGridTextColumn Header="User" Width="95" Binding="{Binding SunSign, Mode=OneWay}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Path" Width="*" Binding="{Binding ChineseSign, Mode=OneWay}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Start date" Width="110" Binding="{Binding BirthDate, Mode=OneWay, StringFormat=dd/MM/yyyy }"></DataGridTextColumn>
+                <DataGridTextColumn Header="ID" Width="50" Binding="{Binding ID, Mode=OneWay}"></DataGridTextColumn>
+                <DataGridCheckBoxColumn Header="IsActive" Width="75" Binding="{Binding IsActive, Mode=OneWay}"></DataGridCheckBoxColumn>
+                <DataGridTextColumn Header="RAM %" Width="80" Binding="{Binding RAMAmount, Mode=OneWay}"></DataGridTextColumn>
+                <DataGridTextColumn Header="CPU %" Width="80" Binding="{Binding CPUPercents, Mode=OneWay}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Threads" Width="95" Binding="{Binding Threads, Mode=OneWay}"></DataGridTextColumn>
+                <DataGridTextColumn Header="User" Width="95" Binding="{Binding User, Mode=OneWay}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Path" Width="*" Binding="{Binding DirectoryPath, Mode=OneWay}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Start time" Width="110" Binding="{Binding StartTime, Mode=OneWay, StringFormat=dd/MM/yyyy }"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
         <Button Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch" 
