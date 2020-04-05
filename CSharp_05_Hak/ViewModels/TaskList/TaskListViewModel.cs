@@ -389,9 +389,9 @@ namespace CSharp_05_Hak.ViewModels.TaskList
 
         private async void ShowThreadsImplementation(object obj)
         {
+                StringBuilder sb = new StringBuilder();
             await Task.Run(() =>
             {
-                StringBuilder sb = new StringBuilder();
                 sb.Append("ID                ThreadState           PriorityLevel                           StartTime\n");
                 try
                 {
@@ -403,47 +403,44 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                 }
                 catch (System.ComponentModel.Win32Exception e)
                 {
-                    MessageBox.Show("Win32 Access denied");
+                    MessageBox.Show("Win32 Access denied", "Error");
                     return;
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Access denied");
+                    MessageBox.Show("Access denied", "Error");
                     return;
                 }
-
-                MessageBox.Show(sb.ToString());
-
             });
+                MessageBox.Show(sb.ToString(), "Threads");
         }
 
         private async void ShowModulesImplementation(object obj)
         {
+                StringBuilder sb = new StringBuilder();
             await Task.Run(() =>
             {
-                StringBuilder sb = new StringBuilder();
-                sb.Append("ModuleName                                        ModuleMemorySize\n");
+                sb.Append("ModuleName                                                                FileName\n");
                 try
                 {
                     foreach (ProcessModule module in SelectedProcess.Modules)
                     {
                         sb.Append(module.ModuleName.ToString() + "                                                   " +
-                            module.ModuleMemorySize.ToString() + '\n');
+                            module.FileName.ToString() + '\n');
                     }
                 }
                 catch (System.ComponentModel.Win32Exception e)
                 {
-                    MessageBox.Show("Win32 Cannot access");
+                    MessageBox.Show("Win32 Cannot access", "Error");
                     return;
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Cannot access");
+                    MessageBox.Show("Cannot access", "Error");
                     return;
                 }
-                MessageBox.Show(sb.ToString());
-
             });
+                MessageBox.Show( sb.ToString(), "Modules");
         }
 
         private void OpenFolderImplementation(object obj)
