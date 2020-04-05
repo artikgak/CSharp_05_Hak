@@ -14,7 +14,6 @@ namespace CSharp_05_Hak.Models
         private float _cpuPercents;
         private int _threads;
 
-        private PerformanceCounter _cpuPerformanceCounter;
         #endregion
 
         #region Properties
@@ -49,6 +48,10 @@ namespace CSharp_05_Hak.Models
         }
         public int Threads
         {
+            set
+            {
+                _threads = value;
+            }
             get { return _process.Threads.Count; }
         }
         public string User
@@ -141,9 +144,7 @@ namespace CSharp_05_Hak.Models
         internal SingleProcess(Process process)
         {
             _process = process;
-            //perfCounter = new PerformanceCounter("Process", "% Processor Time", "chrome");
-            //perfCounter = new PerformanceCounter();
-            //perfCounter.NextValue();
+
         }
 
     }
