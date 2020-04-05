@@ -41,10 +41,11 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Width="100" CanUserSort="False" Binding="{Binding Name, Mode=OneWay}"></DataGridTextColumn>
                 <DataGridTextColumn Header="ID" Width="50" CanUserSort="False" Binding="{Binding ID, Mode=OneWay}"></DataGridTextColumn>
-                <DataGridCheckBoxColumn Header="IsActive" CanUserSort="False" Width="75" Binding="{Binding IsActive, Mode=OneWay}"></DataGridCheckBoxColumn>
-                <DataGridTextColumn Header="RAM %" CanUserSort="False" Width="80" Binding="{Binding RAMAmount, Mode=OneWay}"></DataGridTextColumn>
-                <DataGridTextColumn Header="CPU %" CanUserSort="False" Width="80" Binding="{Binding CPUPercents, Mode=OneWay}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Threads" CanUserSort="False" Width="95" Binding="{Binding Threads, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
+                <DataGridCheckBoxColumn Header="IsActive" CanUserSort="False" Width="75" Binding="{Binding IsActive, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></DataGridCheckBoxColumn>
+                <DataGridTextColumn Header="RAM MB" CanUserSort="False" Width="85" Binding="{Binding RAMAmount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
+                <DataGridTextColumn Header="RAM %" CanUserSort="False" Width="80" Binding="{Binding RAMPercentage, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
+                <DataGridTextColumn Header="CPU %" CanUserSort="False" Width="75" Binding="{Binding CPUPercents, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Threads" CanUserSort="False" Width="80" Binding="{Binding Threads, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
                 <DataGridTextColumn Header="User" Width="95" CanUserSort="False" Binding="{Binding User, Mode=OneWay}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Path" Width="*" CanUserSort="False" Binding="{Binding DirectoryPath, Mode=OneWay}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Start time" Width="110" CanUserSort="False" Binding="{Binding StartTime, Mode=OneWay, StringFormat=dd/MM/yyyy }"></DataGridTextColumn>

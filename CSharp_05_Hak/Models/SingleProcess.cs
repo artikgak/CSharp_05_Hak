@@ -2,10 +2,11 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using CSharp_05_Hak.Tools;
 
 namespace CSharp_05_Hak.Models
 {
-    internal class SingleProcess
+    internal class SingleProcess:BaseViewModel
     {
         #region Fields
         private readonly Process _process;
@@ -13,7 +14,11 @@ namespace CSharp_05_Hak.Models
         private float _ramAmount;
         private float _cpuPercents;
         private int _threads;
-
+        private readonly PerformanceCounter _cpuCounter;
+        private readonly PerformanceCounter _memoryUsageCounter;
+        private double _cpuLoadPercentage;
+        private double _memoryPercentageUsage;
+        private double _memoryMBytesUsage;
         #endregion
 
         #region Properties
@@ -35,23 +40,61 @@ namespace CSharp_05_Hak.Models
             get { return _process.Responding; }
 
         }
-        public float CPUPercents
+
+        public PerformanceCounter CPUCounter
         {
             get
             {
-                return _cpuPercents;
+                return _cpuCounter;
             }
         }
-        public float RAMAmount
-        {
-            get { return _ramAmount; }
-        }
-        public int Threads
+        public double CPUPercents
         {
             set
             {
-                _threads = value;
+                _cpuLoadPercentage = value;
+                OnPropertyChanged();
             }
+            get
+            {
+                return _cpuLoadPercentage;
+            }
+        }
+        public PerformanceCounter MemoryUsageCounter
+        {
+            get
+            {
+                return _memoryUsageCounter;
+            }
+        }
+
+        public double RAMAmount
+        {
+            get
+            {
+                return _memoryMBytesUsage;
+            }
+            set
+            {
+                _memoryMBytesUsage = value;
+                OnPropertyChanged();
+            }
+        }
+        public double RAMPercentage
+        {
+            get
+            {
+                return _memoryPercentageUsage;
+            }
+            set
+            {
+                _memoryPercentageUsage = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        public int Threads
+        {
             get { return _process.Threads.Count; }
         }
         public string User
@@ -89,7 +132,6 @@ namespace CSharp_05_Hak.Models
         {
             get
             {
-
                 return _process.Modules;
             }
         }
@@ -145,7 +187,8 @@ namespace CSharp_05_Hak.Models
         internal SingleProcess(Process process)
         {
             _process = process;
-
+            _cpuCounter = new PerformanceCounter("Process", "% Processor Time", _process.ProcessName, true);
+            _memoryUsageCounter = new PerformanceCounter("Process", "Working Set", _process.ProcessName, true);
         }
 
     }

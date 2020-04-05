@@ -1,7 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
-using CSharp_05_Hak.Tools.Navigation;
-using CSharp_05_Hak.Tools.Manager;
 using CSharp_05_Hak.ViewModels;
 
 
