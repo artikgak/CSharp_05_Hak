@@ -199,66 +199,66 @@ namespace CSharp_05_Hak.ViewModels.TaskList
 
         #endregion
 
-        private async void SortImplementation(object obj, SortType sortType)
+        private void SortImplementation(object obj, SortType sortType)
         {
             currentSort = sortType;
-            //updateProcessParamsTimer.
+            UpdateProccesses(new object(), new EventArgs());
         }
 
-        private async void SortImplementation1(object obj, SortType sortType)
-        {
-            currentSort = sortType;
-            await Task.Run(() =>
-            {
-                IOrderedEnumerable<SingleProcess> sortedProccesses;
-                switch (sortType)
-                {
-                    case SortType.CPUPercents:
-                        Array.Sort(Processes,
-                                    delegate (SingleProcess x, SingleProcess y) { return x.CPUPercents.CompareTo(y.CPUPercents); });
-                        break;
-                    case SortType.FilePath:
-                        sortedProccesses = from u in _processes
-                                        orderby u.DirectoryPath
-                                        select u;
-                        break;
-                    case SortType.ID:
-                        Array.Sort(_processes,
-                                    delegate (SingleProcess x, SingleProcess y) { return x.ID.CompareTo(y.ID); });
-                        break;
-                    case SortType.IsActive:
-                        sortedProccesses = from u in _processes
-                                        orderby u.IsActive
-                                        select u;
-                        break;
-                    case SortType.Name:
-                        sortedProccesses = from u in _processes
-                                        orderby u.Name
-                                        select u;
-                        break;
-                    case SortType.RAMAmount:
-                        sortedProccesses = from u in _processes
-                                        orderby u.RAMAmount
-                                        select u;
-                        break;
-                    case SortType.StartTime:
-                        sortedProccesses = from u in _processes
-                                        orderby u.StartTime
-                                        select u;
-                        break;
-                    case SortType.ThreadsNumber:
-                        sortedProccesses = from u in _processes
-                                        orderby u.Threads
-                                        select u;
-                        break;
-                    default:
-                        sortedProccesses = from u in _processes
-                                        orderby u.User
-                                        select u;
-                        break;
-                }
-            });
-        }
+        //private async void SortImplementation1(object obj, SortType sortType)
+        //{
+        //    currentSort = sortType;
+        //    await Task.Run(() =>
+        //    {
+        //        IOrderedEnumerable<SingleProcess> sortedProccesses;
+        //        switch (sortType)
+        //        {
+        //            case SortType.CPUPercents:
+        //                Array.Sort(Processes,
+        //                            delegate (SingleProcess x, SingleProcess y) { return x.CPUPercents.CompareTo(y.CPUPercents); });
+        //                break;
+        //            case SortType.FilePath:
+        //                sortedProccesses = from u in _processes
+        //                                orderby u.DirectoryPath
+        //                                select u;
+        //                break;
+        //            case SortType.ID:
+        //                Array.Sort(_processes,
+        //                            delegate (SingleProcess x, SingleProcess y) { return x.ID.CompareTo(y.ID); });
+        //                break;
+        //            case SortType.IsActive:
+        //                sortedProccesses = from u in _processes
+        //                                orderby u.IsActive
+        //                                select u;
+        //                break;
+        //            case SortType.Name:
+        //                sortedProccesses = from u in _processes
+        //                                orderby u.Name
+        //                                select u;
+        //                break;
+        //            case SortType.RAMAmount:
+        //                sortedProccesses = from u in _processes
+        //                                orderby u.RAMAmount
+        //                                select u;
+        //                break;
+        //            case SortType.StartTime:
+        //                sortedProccesses = from u in _processes
+        //                                orderby u.StartTime
+        //                                select u;
+        //                break;
+        //            case SortType.ThreadsNumber:
+        //                sortedProccesses = from u in _processes
+        //                                orderby u.Threads
+        //                                select u;
+        //                break;
+        //            default:
+        //                sortedProccesses = from u in _processes
+        //                                orderby u.User
+        //                                select u;
+        //                break;
+        //        }
+        //    });
+        //}
 
 
         private void UpdateProccesses(object sender, EventArgs timerArguments)
@@ -272,9 +272,28 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                 case SortType.ID:
                 Array.Sort(pr, delegate (Process x, Process y) { return x.Id.CompareTo(y.Id); });
                 break;
-
-                default:
-                break;
+                case SortType.CPUPercents:
+                    //Array.Sort(Processes,delegate (SingleProcess x, SingleProcess y) { return x.CPUPercents.CompareTo(y.CPUPercents); });
+                    break;
+                case SortType.FilePath:
+                    Array.Sort(pr, delegate (Process x, Process y) { return x.MainModule.FileName.CompareTo(y.MainModule.FileName); });
+                    break;
+                case SortType.IsActive:
+                    Array.Sort(pr, delegate (Process x, Process y) { return x.Responding.CompareTo(y.Responding); });
+                    break;
+                case SortType.RAMAmount:
+                    //Array.Sort(pr, delegate (Process x, Process y) { return x.ProcessName.CompareTo(y.ProcessName); });
+                    break;
+                case SortType.StartTime:
+                    //check non null
+                    //Array.Sort(pr, delegate (Process x, Process y) { return x.StartTime.CompareTo(y.StartTime); });
+                    break;
+                case SortType.ThreadsNumber:
+                    Array.Sort(pr, delegate (Process x, Process y) { return x.Threads.Count.CompareTo(y.Threads.Count); });
+                    break;
+                default: //User
+                    //Array.Sort(pr, delegate (Process x, Process y) { return x.ProcessName.CompareTo(y.ProcessName); });
+                    break;
             }
             Processes = new SingleProcess[pr.Length];
             for (int i = 0; i < pr.Length; ++i)
