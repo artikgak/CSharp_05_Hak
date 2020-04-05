@@ -162,7 +162,7 @@ namespace CSharp_05_Hak.ViewModels.TaskList
             get
             {
                 return _sortByName ?? (_sortByName = new RelayCommand<object>(o =>
-                           SortImplementation1(o, SortType.Name)));
+                           SortImplementation(o, SortType.Name)));
             }
         }
         public RelayCommand<object> SortByIsActive
@@ -194,7 +194,7 @@ namespace CSharp_05_Hak.ViewModels.TaskList
             get
             {
                 return _sortByThreadsNumber ?? (_sortByThreadsNumber = new RelayCommand<object>(o =>
-                           SortImplementation1(o, SortType.ThreadsNumber)));
+                           SortImplementation(o, SortType.ThreadsNumber)));
             }
         }
         public RelayCommand<object> SortByUser
@@ -224,12 +224,12 @@ namespace CSharp_05_Hak.ViewModels.TaskList
 
         #endregion
 
-        private void SortImplementation(object obj, SortType sortType)
+        private void SortImplementation1(object obj, SortType sortType)
         {
             currentSort = sortType;
         }
 
-        private async void SortImplementation1(object obj, SortType sortType)
+        private async void SortImplementation(object obj, SortType sortType)
         {
             currentSort = sortType;
             await Task.Run(() =>
@@ -238,20 +238,22 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                 switch (currentSort)
                 {
                     case SortType.CPUPercents:
-                        Array.Sort(Processes,
-                                    delegate (SingleProcess x, SingleProcess y) { return x.CPUPercents.CompareTo(y.CPUPercents); });
+                        sortedProccesses = from u in _newProcesses
+                                           orderby u.CPUPercents
+                                           select u;
                         break;
                     case SortType.FilePath:
-                        sortedProccesses = from u in _processes
+                        sortedProccesses = from u in _newProcesses
                                            orderby u.DirectoryPath
                                            select u;
                         break;
                     case SortType.ID:
-                        Array.Sort(_processes,
-                                    delegate (SingleProcess x, SingleProcess y) { return x.ID.CompareTo(y.ID); });
+                        sortedProccesses = from u in _newProcesses
+                                           orderby u.ID
+                                           select u;
                         break;
                     case SortType.IsActive:
-                        sortedProccesses = from u in _processes
+                        sortedProccesses = from u in _newProcesses
                                            orderby u.IsActive
                                            select u;
                         break;
@@ -261,12 +263,12 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                                            select u;
                         break;
                     case SortType.RAMAmount:
-                        sortedProccesses = from u in _processes
+                        sortedProccesses = from u in _newProcesses
                                            orderby u.RAMAmount
                                            select u;
                         break;
                     case SortType.StartTime:
-                        sortedProccesses = from u in _processes
+                        sortedProccesses = from u in _newProcesses
                                            orderby u.StartTime
                                            select u;
                         break;
@@ -276,7 +278,7 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                                            select u;
                         break;
                     default:
-                        sortedProccesses = from u in _processes
+                        sortedProccesses = from u in _newProcesses
                                            orderby u.User
                                            select u;
                         break;
