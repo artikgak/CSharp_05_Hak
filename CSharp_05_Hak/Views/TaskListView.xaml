@@ -35,7 +35,7 @@
         </Menu>
         <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" 
                Content="Task Manager" FontSize="20" FontWeight="Bold"></Label>
-        <DataGrid SelectionMode="Single" SelectedItem="{Binding SelectedProcess, Mode=TwoWay}" 
+        <DataGrid SelectionMode="Single" SelectedItem="{Binding SelectedProcess, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                   Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" dgx:DataGridFilter.IsAutoFilterEnabled="True" 
                   ItemsSource="{Binding Processes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
                   AutoGenerateColumns="False" ScrollViewer.CanContentScroll="True">

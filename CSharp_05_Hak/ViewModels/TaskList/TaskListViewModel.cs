@@ -25,12 +25,13 @@ namespace CSharp_05_Hak.ViewModels.TaskList
         StartTime
     }
 
-    internal class TaskListViewModel: BaseViewModel
+    internal class TaskListViewModel : BaseViewModel
     {
         private static SortType currentSort = SortType.Name;
         private SingleProcess[] _processes;
         private System.Timers.Timer updateProcessParamsTimer;
-        private SingleProcess _selectedProcess;
+        private static SingleProcess _selectedProcess;
+        private int selInd;
 
         #region Commands
         #region Sort
@@ -84,6 +85,15 @@ namespace CSharp_05_Hak.ViewModels.TaskList
             private set
             {
                 _processes = value;
+                //for (int i = 0; i < Processes.Length; ++i)
+                //{
+                //    if (_selectedProcess == null) break;
+                //    if (_selectedProcess.ID == _processes[i].ID)
+                //    {
+                //        SelectedProcess = _processes[i];
+                //        break;
+                //    }
+                //}
                 OnPropertyChanged();
             }
         }
@@ -270,13 +280,13 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                     Array.Sort(pr, delegate (Process x, Process y) { return x.ProcessName.CompareTo(y.ProcessName); });
                     break;
                 case SortType.ID:
-                Array.Sort(pr, delegate (Process x, Process y) { return x.Id.CompareTo(y.Id); });
-                break;
+                    Array.Sort(pr, delegate (Process x, Process y) { return x.Id.CompareTo(y.Id); });
+                    break;
                 case SortType.CPUPercents:
                     //Array.Sort(Processes,delegate (SingleProcess x, SingleProcess y) { return x.CPUPercents.CompareTo(y.CPUPercents); });
                     break;
                 case SortType.FilePath:
-                    Array.Sort(pr, delegate (Process x, Process y) { return x.MainModule.FileName.CompareTo(y.MainModule.FileName); });
+                    //Array.Sort(pr, delegate (Process x, Process y) { return x.MainModule.FileName.CompareTo(y.MainModule.FileName); });
                     break;
                 case SortType.IsActive:
                     Array.Sort(pr, delegate (Process x, Process y) { return x.Responding.CompareTo(y.Responding); });
@@ -295,15 +305,35 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                     //Array.Sort(pr, delegate (Process x, Process y) { return x.ProcessName.CompareTo(y.ProcessName); });
                     break;
             }
+            int temp = SelectedProcess != null ? SelectedProcess.ID : -1;
             Processes = new SingleProcess[pr.Length];
             for (int i = 0; i < pr.Length; ++i)
+            {
                 Processes[i] = new SingleProcess(pr[i]);
+                    
+                if(temp == _processes[i].ID)
+                {
+                    SelectedProcess = _processes[i];
+                }
+            }
+            //SelInd = 0;
+            //into 1 loop
+            //for (int i = 0; i < Processes.Length; ++i)
+            //{
+            //    if (_selectedProcess == null) break;
+            //    if (_selectedProcess.ID == Processes[i].ID)
+            //    {
+            //        SelectedProcess = Processes[i];
+            //        break;
+            //    }
+            //}
             //SortImplementation(new object(), currentSort);
         }
 
         private async void EndTaskImplementation(object obj)
         {
-            await Task.Run(() => {
+            await Task.Run(() =>
+            {
                 if (_selectedProcess.checkAvailability())
                 {
                     SelectedProcess?.ProcessItself?.Kill(); //_selectedProcess.ID
