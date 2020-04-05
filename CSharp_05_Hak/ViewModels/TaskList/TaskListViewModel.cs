@@ -59,7 +59,7 @@ namespace CSharp_05_Hak.ViewModels.TaskList
             //for (int i = 0; i < pr.Length; ++i)
             //    Processes[i] = new SingleProcess(pr[i]);
             Process[] pr = Process.GetProcesses();
-            Array.Sort(pr,delegate (Process x, Process y) { return x.ProcessName.CompareTo(y.ProcessName); });
+            Array.Sort(pr, delegate (Process x, Process y) { return x.ProcessName.CompareTo(y.ProcessName); });
             _newProcesses = new ObservableCollection<SingleProcess>();
             for (int i = 0; i < pr.Length; ++i)
                 _newProcesses.Add(new SingleProcess(pr[i]));
@@ -77,7 +77,9 @@ namespace CSharp_05_Hak.ViewModels.TaskList
         public ObservableCollection<SingleProcess> NewProcesses
         {
             get { return _newProcesses; }
-            private set { _newProcesses = value;
+            private set
+            {
+                _newProcesses = value;
                 OnPropertyChanged();
             }
         }
@@ -235,7 +237,7 @@ namespace CSharp_05_Hak.ViewModels.TaskList
             currentSort = sortType;
             await Task.Run(() =>
             {
-                IOrderedEnumerable<SingleProcess> sortedProccesses=null;
+                IOrderedEnumerable<SingleProcess> sortedProccesses = null;
                 switch (currentSort)
                 {
                     case SortType.CPUPercents:
@@ -328,8 +330,8 @@ namespace CSharp_05_Hak.ViewModels.TaskList
             for (int i = 0; i < pr.Length; ++i)
             {
                 Processes[i] = new SingleProcess(pr[i]);
-                    
-                if(temp == _processes[i].ID)
+
+                if (temp == _processes[i].ID)
                 {
                     SelectedProcess = _processes[i];
                 }
@@ -391,14 +393,26 @@ namespace CSharp_05_Hak.ViewModels.TaskList
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append("ID                ThreadState           PriorityLevel                           StartTime\n");
-                foreach (ProcessThread thread in SelectedProcess.ThreadsCollection)
+                try
                 {
-                    sb.Append(thread.Id.ToString()+ "               " + thread.ThreadState.ToString() + "                   " + 
-                        thread.PriorityLevel.ToString() + "                  " + thread.StartTime.ToString() +'\n');
+                    foreach (ProcessThread thread in SelectedProcess.ThreadsCollection)
+                    {
+                        sb.Append(thread.Id.ToString() + "               " + thread.ThreadState.ToString() + "                   " +
+                            thread.PriorityLevel.ToString() + "                  " + thread.StartTime.ToString() + '\n');
+                    }
+                }
+                catch (System.ComponentModel.Win32Exception e)
+                {
+                    MessageBox.Show("Win32 Access denied");
+                    return;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Access denied");
+                    return;
                 }
 
-
-                    MessageBox.Show(sb.ToString());
+                MessageBox.Show(sb.ToString());
 
             });
         }
@@ -411,12 +425,18 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                 sb.Append("ModuleName                                        ModuleMemorySize\n");
                 try
                 {
-                foreach (ProcessModule module in SelectedProcess.Modules)
-                {
-                    sb.Append(module.ModuleName.ToString() + "                                                   " +
-                        module.ModuleMemorySize.ToString()+'\n');
+                    foreach (ProcessModule module in SelectedProcess.Modules)
+                    {
+                        sb.Append(module.ModuleName.ToString() + "                                                   " +
+                            module.ModuleMemorySize.ToString() + '\n');
+                    }
                 }
-                }catch(Exception e)
+                catch (System.ComponentModel.Win32Exception e)
+                {
+                    MessageBox.Show("Win32 Cannot access");
+                    return;
+                }
+                catch (Exception e)
                 {
                     MessageBox.Show("Cannot access");
                     return;
