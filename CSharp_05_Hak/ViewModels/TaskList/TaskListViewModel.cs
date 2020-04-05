@@ -10,6 +10,7 @@ using System.Windows.Threading;
 using CSharp_05_Hak.Models;
 using CSharp_05_Hak.Tools;
 using CSharp_05_Hak.Tools.MVVM;
+using System.Text;
 
 namespace CSharp_05_Hak.ViewModels.TaskList
 {
@@ -131,14 +132,14 @@ namespace CSharp_05_Hak.ViewModels.TaskList
             }
         }
 
-        //public RelayCommand<object> ShowThreads
-        //{
-        //    get
-        //    {
-        //        return _showThreads ?? (_showThreads = new RelayCommand<object>(
-        //                   ShowThreadsImplementation, o => CanExecuteCommand()));
-        //    }
-        //}
+        public RelayCommand<object> ShowThreads
+        {
+            get
+            {
+                return _showThreads ?? (_showThreads = new RelayCommand<object>(
+                           ShowThreadsImplementation, o => CanExecuteCommand()));
+            }
+        }
 
         //public RelayCommand<object> ShowModules
         //{
@@ -381,6 +382,24 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                 {
                     MessageBox.Show("Have no access");
                 }
+            });
+        }
+
+        private async void ShowThreadsImplementation(object obj)
+        {
+            await Task.Run(() =>
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("ID                   ThreadState             PriorityLevel                           StartTime\n");
+                foreach (ProcessThread thread in SelectedProcess.ThreadsCollection)
+                {
+                    sb.Append(thread.Id.ToString()+ "               " + thread.ThreadState.ToString() + "                   " + 
+                        thread.PriorityLevel.ToString() + "                  " + thread.StartTime.ToString() +'\n');
+                }
+
+
+                    MessageBox.Show(sb.ToString());
+
             });
         }
 
