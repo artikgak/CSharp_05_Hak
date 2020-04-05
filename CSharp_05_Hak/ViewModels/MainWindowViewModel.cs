@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using CSharp_05_Hak.Tools;
+﻿using CSharp_05_Hak.Tools;
 using CSharp_05_Hak.Tools.Manager;
 using CSharp_05_Hak.Tools.Navigation;
 
