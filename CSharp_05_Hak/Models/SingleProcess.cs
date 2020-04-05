@@ -8,20 +8,13 @@ namespace CSharp_05_Hak.Models
     internal class SingleProcess
     {
         #region Fields
-
         private readonly Process _process;
-        private readonly string _name;
-        private readonly int _id;
         private bool _isActive;
-        private double _ramAmount;
-        private double _cpuPercents;
+        private float _ramAmount;
+        private float _cpuPercents;
         private int _threads;
-        private readonly string _user;
-        private readonly string _filepath;
-        private readonly DateTime _startingTime;
 
-
-        private PerformanceCounter perfCounter;
+        private PerformanceCounter _cpuPerformanceCounter;
         #endregion
 
         #region Properties
@@ -47,12 +40,12 @@ namespace CSharp_05_Hak.Models
         {
             get
             {
-                return perfCounter.NextValue() / Environment.ProcessorCount;
+                return _cpuPercents;
             }
         }
         public float RAMAmount
         {
-            get { return _process.PrivateMemorySize64 / 1024; }
+            get { return _ramAmount; }
         }
         public int Threads
         {

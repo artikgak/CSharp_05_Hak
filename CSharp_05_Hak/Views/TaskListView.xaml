@@ -20,6 +20,19 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+            <MenuItem Header="Sort">
+                <MenuItem Header="Sort by ID" Command="{Binding SortById}"></MenuItem>
+                <MenuItem Header="Sort by process name" Command="{Binding SortByName}"></MenuItem>
+                <MenuItem Header="Sort by IsActive" Command="{Binding SortByIsActive}"></MenuItem>
+                <MenuItem Header="Sort by % of CPU" Command="{Binding SortByCPUPercents}"></MenuItem>
+                <MenuItem Header="Sort by RAM amount" Command="{Binding SortByRAMAmount}"></MenuItem>
+                <MenuItem Header="Sort by threads number" Command="{Binding SortByThreadsNumber}"></MenuItem>
+                <MenuItem Header="Sort by user" Command="{Binding SortByUser}"></MenuItem>
+                <MenuItem Header="Sort by filepath" Command="{Binding SortByFilepath}"></MenuItem>
+                <MenuItem Header="Sort by starting time" Command="{Binding SortByStartingTime}"></MenuItem>
+            </MenuItem>
+        </Menu>
         <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" 
                Content="Task Manager" FontSize="20" FontWeight="Bold"></Label>
         <DataGrid SelectionMode="Single" SelectedItem="{Binding SelectedProcess}" 
@@ -27,15 +40,15 @@
                   ItemsSource="{Binding Processes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
                   AutoGenerateColumns="False" ScrollViewer.CanContentScroll="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Width="100" CanUserSort="True" Binding="{Binding Name, Mode=OneWay}"></DataGridTextColumn>
-                <DataGridTextColumn Header="ID" Width="50" Binding="{Binding ID, Mode=OneWay}"></DataGridTextColumn>
-                <DataGridCheckBoxColumn Header="IsActive" Width="75" Binding="{Binding IsActive, Mode=OneWay}"></DataGridCheckBoxColumn>
-                <DataGridTextColumn Header="RAM %" Width="80" Binding="{Binding RAMAmount, Mode=OneWay}"></DataGridTextColumn>
-                <DataGridTextColumn Header="CPU %" Width="80" Binding="{Binding CPUPercents, Mode=OneWay}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Threads" Width="95" Binding="{Binding Threads, Mode=OneWay}"></DataGridTextColumn>
-                <DataGridTextColumn Header="User" Width="95" Binding="{Binding User, Mode=OneWay}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Path" Width="*" Binding="{Binding DirectoryPath, Mode=OneWay}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Start time" Width="110" Binding="{Binding StartTime, Mode=OneWay, StringFormat=dd/MM/yyyy }"></DataGridTextColumn>
+                <DataGridTextColumn Header="Name" Width="100" CanUserSort="False" Binding="{Binding Name, Mode=OneWay}"></DataGridTextColumn>
+                <DataGridTextColumn Header="ID" Width="50" CanUserSort="False" Binding="{Binding ID, Mode=OneWay}"></DataGridTextColumn>
+                <DataGridCheckBoxColumn Header="IsActive" CanUserSort="False" Width="75" Binding="{Binding IsActive, Mode=OneWay}"></DataGridCheckBoxColumn>
+                <DataGridTextColumn Header="RAM %" CanUserSort="False" Width="80" Binding="{Binding RAMAmount, Mode=OneWay}"></DataGridTextColumn>
+                <DataGridTextColumn Header="CPU %" CanUserSort="False" Width="80" Binding="{Binding CPUPercents, Mode=OneWay}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Threads" CanUserSort="False" Width="95" Binding="{Binding Threads, Mode=OneWay}"></DataGridTextColumn>
+                <DataGridTextColumn Header="User" Width="95" CanUserSort="False" Binding="{Binding User, Mode=OneWay}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Path" Width="*" CanUserSort="False" Binding="{Binding DirectoryPath, Mode=OneWay}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Start time" Width="110" CanUserSort="False" Binding="{Binding StartTime, Mode=OneWay, StringFormat=dd/MM/yyyy }"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
         <Button Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch" 
