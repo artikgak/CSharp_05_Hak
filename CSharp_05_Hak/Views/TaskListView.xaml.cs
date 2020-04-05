@@ -7,9 +7,9 @@ namespace CSharp_05_Hak.Views
     /// <summary>
     /// Interaction logic for TaskListView.xaml
     /// </summary>
-    public partial class TaskListView : UserControl, INavigatable
+    internal partial class TaskListView : UserControl, INavigatable
     {
-        public TaskListView()
+        internal TaskListView()
         {
             InitializeComponent();
             DataContext = new TaskListViewModel();

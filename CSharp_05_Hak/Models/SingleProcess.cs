@@ -11,8 +11,6 @@ namespace CSharp_05_Hak.Models
         #region Fields
         private readonly Process _process;
         private bool _isActive;
-        private float _ramAmount;
-        private float _cpuPercents;
         private int _threads;
         private readonly PerformanceCounter _cpuCounter;
         private readonly PerformanceCounter _memoryUsageCounter;

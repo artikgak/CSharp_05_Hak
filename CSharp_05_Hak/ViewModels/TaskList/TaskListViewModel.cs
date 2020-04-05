@@ -263,7 +263,7 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                 catch (Exception) { }
             }
         }
-        internal void UpdateProcessesList(object sender, EventArgs e)
+        private void UpdateProcessesList(object sender, EventArgs e)
         {
             var currentIds = NewProcesses.Select(p => p.ID).ToList();
 
@@ -356,7 +356,7 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                     SelectedProcess?.ProcessItself?.Kill(); //_selectedProcess.ID
                     //_processes.Remove(_selectedProcess);
                     SelectedProcess = null;
-                    MessageBox.Show("Successfully deleted");
+                    MessageBox.Show("Successfully terminated");
                 }
                 else
                 {

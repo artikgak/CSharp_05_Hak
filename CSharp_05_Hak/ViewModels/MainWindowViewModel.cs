@@ -5,7 +5,7 @@ using CSharp_05_Hak.Tools.Navigation;
 
 namespace CSharp_05_Hak.ViewModels
 {
-    class MainWindowViewModel : BaseViewModel, IContentOwner
+    internal class MainWindowViewModel : BaseViewModel, IContentOwner
     {
 
         private INavigatable _content;
