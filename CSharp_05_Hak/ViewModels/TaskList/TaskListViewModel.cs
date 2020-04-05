@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using CSharp_05_Hak.Models;
 using CSharp_05_Hak.Tools;
 using CSharp_05_Hak.Tools.MVVM;
@@ -32,7 +33,7 @@ namespace CSharp_05_Hak.ViewModels.TaskList
         private System.Timers.Timer updateProcessParamsTimer;
         private static SingleProcess _selectedProcess;
         private int selInd;
-
+        private ObservableCollection<SingleProcess> _newProcesses;
         #region Commands
         #region Sort
         private RelayCommand<object> _sortById;
@@ -52,20 +53,34 @@ namespace CSharp_05_Hak.ViewModels.TaskList
         #endregion
         internal TaskListViewModel()
         {
+            //Process[] pr = Process.GetProcesses();
+            //Processes = new SingleProcess[pr.Length];
+            //for (int i = 0; i < pr.Length; ++i)
+            //    Processes[i] = new SingleProcess(pr[i]);
             Process[] pr = Process.GetProcesses();
-            Array.Sort(pr,
-                                    delegate (Process x, Process y) { return x.ProcessName.CompareTo(y.ProcessName); });
-            Processes = new SingleProcess[pr.Length];
+            Array.Sort(pr,delegate (Process x, Process y) { return x.ProcessName.CompareTo(y.ProcessName); });
+            _newProcesses = new ObservableCollection<SingleProcess>();
             for (int i = 0; i < pr.Length; ++i)
-                Processes[i] = new SingleProcess(pr[i]);
-            updateProcessParamsTimer = new System.Timers.Timer(); //list timer
-            updateProcessParamsTimer.Elapsed += UpdateProccesses;
-            updateProcessParamsTimer.Interval = 2000;
-            updateProcessParamsTimer.Enabled = true;
-            updateProcessParamsTimer.Start();
+                _newProcesses.Add(new SingleProcess(pr[i]));
+            //    updateProcessParamsTimer = new System.Timers.Timer(); //list timer
+            //updateProcessParamsTimer.Elapsed += UpdateProcesses;
+            //updateProcessParamsTimer.Interval = 2000;
+            //updateProcessParamsTimer.Enabled = true;
+            //updateProcessParamsTimer.Start();
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
+            timer.Tick += UpdateProcesses;
+            timer.Start();
         }
 
         #region Properties
+        public ObservableCollection<SingleProcess> NewProcesses
+        {
+            get { return _newProcesses; }
+            private set { _newProcesses = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         public SingleProcess SelectedProcess
         {
@@ -328,6 +343,29 @@ namespace CSharp_05_Hak.ViewModels.TaskList
             //    }
             //}
             //SortImplementation(new object(), currentSort);
+        }
+
+        public void UpdateProcesses(object sender, EventArgs e)
+        {
+            var currentIds = NewProcesses.Select(p => p.ID).ToList();
+
+            foreach (var p in Process.GetProcesses())
+            {
+                if (!currentIds.Remove(p.Id)) // it's a new process id
+                {
+                    NewProcesses.Add(new SingleProcess(p));
+                }
+                else
+                {
+
+                }
+            }
+
+            foreach (var id in currentIds) // these do not exist any more
+            {
+                var process = NewProcesses.First(p => p.ID == id);
+                NewProcesses.Remove(process);
+            }
         }
 
         private async void EndTaskImplementation(object obj)

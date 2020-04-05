@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using CSharp_05_Hak.Models;
 using System.Diagnostics;
-using System.Windows;
 
 namespace CSharp_05_Hak.Tools.Manager
 {
