@@ -52,13 +52,13 @@
                 <DataGridTextColumn Header="Start time" Width="110" CanUserSort="False" Binding="{Binding StartTime, Mode=OneWay, StringFormat=dd/MM/yyyy }"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Button Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch" 
+        <Button Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch" FontWeight="Bold"
                 VerticalAlignment="Center" Height="30" Margin="5" Command="{Binding ShowModules}" Content="Modules"></Button>
-        <Button Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" 
+        <Button Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" FontWeight="Bold"
                 VerticalAlignment="Center" Height="30" Margin="5"  Command="{Binding ShowThreads}" Content="Threads"></Button>
-        <Button Grid.Row="3" Grid.Column="2" HorizontalAlignment="Stretch" 
+        <Button Grid.Row="3" Grid.Column="2" HorizontalAlignment="Stretch" FontWeight="Bold"
                 VerticalAlignment="Center" Height="30" Margin="5" Command="{Binding OpenFolder}" Content="Open folder"></Button>
-        <Button Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch" 
+        <Button Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch" Foreground="Red" FontWeight="Bold"
                 VerticalAlignment="Center" Height="30" Margin="5" Command="{Binding EndTask}" Content="Terminate"></Button>
     </Grid>
 </UserControl>

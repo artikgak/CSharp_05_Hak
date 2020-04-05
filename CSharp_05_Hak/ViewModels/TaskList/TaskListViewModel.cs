@@ -76,57 +76,6 @@ namespace CSharp_05_Hak.ViewModels.TaskList
         }
         #endregion
 
-
-        private void RefreshProcesses(object sender, EventArgs timerArguments)
-        {
-            lock (_newProcesses)
-            {
-                try
-                {
-                    foreach (SingleProcess process in _newProcesses)
-                    {
-                        try
-                        {
-                            process.CPUPercents = Math.Round(process.CPUCounter.NextValue() / Environment.ProcessorCount/2, 2);
-                        }
-                        catch (Exception) { }
-                        try
-                        {
-                            process.RAMAmount = Math.Round(process.MemoryUsageCounter.NextValue() / 1024 / 1024 / 2, 2);
-                        }
-                        catch (Exception) { }
-                        try
-                        {
-                            process.RAMPercentage = Math.Round(process.MemoryUsageCounter.NextValue() / Environment.WorkingSet/2, 2);
-                        }
-                        catch (Exception) { }
-                        process.Threads = Process.GetProcessById(process.ID).Threads.Count;
-                    }
-                }
-                catch (Exception) { }
-            }
-        }
-        internal void UpdateProcessesList(object sender, EventArgs e)
-        {
-            var currentIds = NewProcesses.Select(p => p.ID).ToList();
-
-            foreach (var p in Process.GetProcesses())
-            {
-                if (!currentIds.Remove(p.Id)) // it's a new process id
-                {
-                    NewProcesses.Add(new SingleProcess(p));
-                }
-            }
-
-            foreach (var id in currentIds) // these do not exist any more
-            {
-                var process = NewProcesses.First(p => p.ID == id);
-                NewProcesses.Remove(process);
-            }
-
-            SortImplementation(new object(), currentSort);
-        }
-
         #region Properties
         public ObservableCollection<SingleProcess> NewProcesses
         {
@@ -284,6 +233,57 @@ namespace CSharp_05_Hak.ViewModels.TaskList
         #endregion
         #endregion
 
+        private void RefreshProcesses(object sender, EventArgs timerArguments)
+        {
+            lock (_newProcesses)
+            {
+                try
+                {
+                    foreach (SingleProcess process in _newProcesses)
+                    {
+                        try
+                        {
+                            process.CPUPercents = Math.Round(process.CPUCounter.NextValue() / Environment.ProcessorCount/2, 2);
+                        }
+                        catch (Exception) { }
+                        try
+                        {
+                            process.RAMAmount = Math.Round(process.MemoryUsageCounter.NextValue() / 1024 / 1024 / 2, 2);
+                        }
+                        catch (Exception) { }
+                        try
+                        {
+                            process.RAMPercentage = Math.Round(process.MemoryUsageCounter.NextValue() / Environment.WorkingSet/2, 2);
+                        }
+                        catch (Exception) { }
+                        process.Threads = Process.GetProcessById(process.ID).Threads.Count;
+                        process.IsActive = Process.GetProcessById(process.ID).Responding;
+                    }
+                }
+                catch (Exception) { }
+            }
+        }
+        internal void UpdateProcessesList(object sender, EventArgs e)
+        {
+            var currentIds = NewProcesses.Select(p => p.ID).ToList();
+
+            foreach (var p in Process.GetProcesses())
+            {
+                if (!currentIds.Remove(p.Id)) // it's a new process id
+                {
+                    NewProcesses.Add(new SingleProcess(p));
+                }
+            }
+
+            foreach (var id in currentIds) // these do not exist any more
+            {
+                var process = NewProcesses.First(p => p.ID == id);
+                NewProcesses.Remove(process);
+            }
+
+            SortImplementation(new object(), currentSort);
+        }
+
         private async void SortImplementation(object obj, SortType sortType)
         {
             currentSort = sortType;
@@ -334,7 +334,7 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                         break;
                     case SortType.ThreadsNumber:
                         sortedProccesses = from u in _newProcesses
-                                           orderby u.Threads
+                                           orderby u.Threads descending
                                            select u;
                         break;
                     default:
@@ -346,7 +346,6 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                 NewProcesses = new ObservableCollection<SingleProcess>(sortedProccesses);
             });
         }
-
 
         private async void EndTaskImplementation(object obj)
         {

@@ -1,5 +1,4 @@
-﻿using CSharp_05_Hak.Tools.Manager;
-using CSharp_05_Hak.Tools.Navigation;
+﻿using CSharp_05_Hak.Tools.Navigation;
 using CSharp_05_Hak.ViewModels.TaskList;
 using System.Windows.Controls;
 

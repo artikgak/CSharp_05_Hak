@@ -37,6 +37,11 @@ namespace CSharp_05_Hak.Models
         }
         public bool IsActive
         {
+            set
+            {
+                _isActive = value;
+                OnPropertyChanged();
+            }
             get { return _process.Responding; }
 
         }
@@ -101,11 +106,6 @@ namespace CSharp_05_Hak.Models
                 _threads = value;
                 OnPropertyChanged();
             }
-        }
-
-        internal void UpdateThreads()
-        {
-            Threads = _process.Threads.Count;
         }
 
         public string User

@@ -1,4 +1,5 @@
-﻿using CSharp_05_Hak.Tools;
+﻿using System.Windows;
+using CSharp_05_Hak.Tools;
 using CSharp_05_Hak.Tools.Manager;
 using CSharp_05_Hak.Tools.Navigation;
 
@@ -20,11 +21,11 @@ namespace CSharp_05_Hak.ViewModels
                 OnPropertyChanged();
             }
         }
+
         #endregion
 
         internal MainWindowViewModel()
         {
-            //StationManager.Instance.Initialize();
             NavigationManager.Instance.Initialize(new InitializationNavigationModel(this));
             NavigationManager.Instance.Navigate(ViewType.Main);
         }
