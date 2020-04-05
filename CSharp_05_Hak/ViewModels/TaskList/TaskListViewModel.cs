@@ -19,6 +19,7 @@ namespace CSharp_05_Hak.ViewModels.TaskList
         IsActive,
         CPUPercents,
         RAMAmount,
+        RAMPercents,
         ThreadsNumber,
         User,
         FilePath,
@@ -27,6 +28,8 @@ namespace CSharp_05_Hak.ViewModels.TaskList
 
     internal class TaskListViewModel : BaseViewModel
     {
+
+        #region Fields
         private static SortType currentSort = SortType.Name;
         private SingleProcess[] _processes;
         private static SingleProcess _selectedProcess;
@@ -38,6 +41,7 @@ namespace CSharp_05_Hak.ViewModels.TaskList
         private RelayCommand<object> _sortByIsActive;
         private RelayCommand<object> _sortByCPUPercents;
         private RelayCommand<object> _sortByRAMAmount;
+        private RelayCommand<object> _sortByRAMPercents;
         private RelayCommand<object> _sortByThreadsNumber;
         private RelayCommand<object> _sortByUser;
         private RelayCommand<object> _sortByFilepath;
@@ -48,12 +52,11 @@ namespace CSharp_05_Hak.ViewModels.TaskList
         private RelayCommand<object> _showThreads;
         private RelayCommand<object> _showModules;
         #endregion
+        #endregion
+
+        #region Constructor
         internal TaskListViewModel()
         {
-            //Process[] pr = Process.GetProcesses();
-            //Processes = new SingleProcess[pr.Length];
-            //for (int i = 0; i < pr.Length; ++i)
-            //    Processes[i] = new SingleProcess(pr[i]);
             Process[] pr = Process.GetProcesses();
             Array.Sort(pr, delegate (Process x, Process y) { return x.ProcessName.CompareTo(y.ProcessName); });
             _newProcesses = new ObservableCollection<SingleProcess>();
@@ -61,7 +64,7 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                 _newProcesses.Add(new SingleProcess(pr[i]));
             //process list
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
-            timer.Tick += UpdateProcesses;
+            timer.Tick += UpdateProcessesList;
             timer.Start();
             // process meta data
             System.Timers.Timer updateProcessTimer = new System.Timers.Timer();
@@ -71,6 +74,8 @@ namespace CSharp_05_Hak.ViewModels.TaskList
             updateProcessTimer.Enabled = true;
             updateProcessTimer.Start();
         }
+        #endregion
+
 
         private void RefreshProcesses(object sender, EventArgs timerArguments)
         {
@@ -78,27 +83,48 @@ namespace CSharp_05_Hak.ViewModels.TaskList
             {
                 try
                 {
-                    foreach (SingleProcess processEntity in _newProcesses)
+                    foreach (SingleProcess process in _newProcesses)
                     {
                         try
                         {
-                            processEntity.CPUPercents = Math.Round(processEntity.CPUCounter.NextValue() / Environment.ProcessorCount * 2, 2);
+                            process.CPUPercents = Math.Round(process.CPUCounter.NextValue() / Environment.ProcessorCount/2, 2);
                         }
                         catch (Exception) { }
                         try
                         {
-                            processEntity.RAMAmount = Math.Round(processEntity.MemoryUsageCounter.NextValue() / 1024 / 1024, 2);
+                            process.RAMAmount = Math.Round(process.MemoryUsageCounter.NextValue() / 1024 / 1024 / 2, 2);
                         }
                         catch (Exception) { }
                         try
                         {
-                            processEntity.RAMPercentage = Math.Round(processEntity.MemoryUsageCounter.NextValue() / Environment.WorkingSet, 2);
+                            process.RAMPercentage = Math.Round(process.MemoryUsageCounter.NextValue() / Environment.WorkingSet/2, 2);
                         }
                         catch (Exception) { }
+                        process.Threads = Process.GetProcessById(process.ID).Threads.Count;
                     }
                 }
                 catch (Exception) { }
             }
+        }
+        internal void UpdateProcessesList(object sender, EventArgs e)
+        {
+            var currentIds = NewProcesses.Select(p => p.ID).ToList();
+
+            foreach (var p in Process.GetProcesses())
+            {
+                if (!currentIds.Remove(p.Id)) // it's a new process id
+                {
+                    NewProcesses.Add(new SingleProcess(p));
+                }
+            }
+
+            foreach (var id in currentIds) // these do not exist any more
+            {
+                var process = NewProcesses.First(p => p.ID == id);
+                NewProcesses.Remove(process);
+            }
+
+            SortImplementation(new object(), currentSort);
         }
 
         #region Properties
@@ -171,6 +197,8 @@ namespace CSharp_05_Hak.ViewModels.TaskList
             }
         }
 
+        #region SortProperties
+
         public RelayCommand<object> SortById
         {
             get
@@ -211,6 +239,16 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                            SortImplementation(o, SortType.RAMAmount)));
             }
         }
+
+        public RelayCommand<object> SortByRAMPercents
+        {
+            get
+            {
+                return _sortByRAMPercents ?? (_sortByRAMPercents = new RelayCommand<object>(o =>
+                           SortImplementation(o, SortType.RAMPercents)));
+            }
+        }
+
         public RelayCommand<object> SortByThreadsNumber
         {
             get
@@ -243,13 +281,8 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                            SortImplementation(o, SortType.StartTime)));
             }
         }
-
         #endregion
-
-        private void SortImplementation1(object obj, SortType sortType)
-        {
-            currentSort = sortType;
-        }
+        #endregion
 
         private async void SortImplementation(object obj, SortType sortType)
         {
@@ -289,6 +322,11 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                                            orderby u.RAMAmount
                                            select u;
                         break;
+                    case SortType.RAMPercents:
+                        sortedProccesses = from u in _newProcesses
+                                           orderby u.RAMPercentage
+                                           select u;
+                        break;
                     case SortType.StartTime:
                         sortedProccesses = from u in _newProcesses
                                            orderby u.StartTime
@@ -309,87 +347,6 @@ namespace CSharp_05_Hak.ViewModels.TaskList
             });
         }
 
-
-        //private void UpdateProccesses(object sender, EventArgs timerArguments)
-        //{
-        //    Process[] pr = Process.GetProcesses();
-        //    switch (currentSort)
-        //    {
-        //        case SortType.Name:
-        //            Array.Sort(pr, delegate (Process x, Process y) { return x.ProcessName.CompareTo(y.ProcessName); });
-        //            break;
-        //        case SortType.ID:
-        //            Array.Sort(pr, delegate (Process x, Process y) { return x.Id.CompareTo(y.Id); });
-        //            break;
-        //        case SortType.CPUPercents:
-        //            //Array.Sort(Processes,delegate (SingleProcess x, SingleProcess y) { return x.CPUPercents.CompareTo(y.CPUPercents); });
-        //            break;
-        //        case SortType.FilePath:
-        //            //Array.Sort(pr, delegate (Process x, Process y) { return x.MainModule.FileName.CompareTo(y.MainModule.FileName); });
-        //            break;
-        //        case SortType.IsActive:
-        //            Array.Sort(pr, delegate (Process x, Process y) { return x.Responding.CompareTo(y.Responding); });
-        //            break;
-        //        case SortType.RAMAmount:
-        //            //Array.Sort(pr, delegate (Process x, Process y) { return x.ProcessName.CompareTo(y.ProcessName); });
-        //            break;
-        //        case SortType.StartTime:
-        //            //check non null
-        //            //Array.Sort(pr, delegate (Process x, Process y) { return x.StartTime.CompareTo(y.StartTime); });
-        //            break;
-        //        case SortType.ThreadsNumber:
-        //            Array.Sort(pr, delegate (Process x, Process y) { return x.Threads.Count.CompareTo(y.Threads.Count); });
-        //            break;
-        //        default: //User
-        //            //Array.Sort(pr, delegate (Process x, Process y) { return x.ProcessName.CompareTo(y.ProcessName); });
-        //            break;
-        //    }
-        //    int temp = SelectedProcess != null ? SelectedProcess.ID : -1;
-        //    Processes = new SingleProcess[pr.Length];
-        //    for (int i = 0; i < pr.Length; ++i)
-        //    {
-        //        Processes[i] = new SingleProcess(pr[i]);
-
-        //        if (temp == _processes[i].ID)
-        //        {
-        //            SelectedProcess = _processes[i];
-        //        }
-        //    }
-        //    //SelInd = 0;
-        //    //into 1 loop
-        //    //for (int i = 0; i < Processes.Length; ++i)
-        //    //{
-        //    //    if (_selectedProcess == null) break;
-        //    //    if (_selectedProcess.ID == Processes[i].ID)
-        //    //    {
-        //    //        SelectedProcess = Processes[i];
-        //    //        break;
-        //    //    }
-        //    //}
-        //    //SortImplementation(new object(), currentSort);
-        //}
-
-        internal void UpdateProcesses(object sender, EventArgs e)
-        {
-            var currentIds = NewProcesses.Select(p => p.ID).ToList();
-
-            foreach (var p in Process.GetProcesses())
-            {
-                if (!currentIds.Remove(p.Id)) // it's a new process id
-                {
-                    NewProcesses.Add(new SingleProcess(p));
-                }
-            }
-
-            foreach (var id in currentIds) // these do not exist any more
-            {
-                var process = NewProcesses.First(p => p.ID == id);
-                NewProcesses.Remove(process);
-            }
-
-            SortImplementation(new object(), currentSort);
-
-        }
 
         private async void EndTaskImplementation(object obj)
         {

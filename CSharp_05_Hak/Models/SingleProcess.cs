@@ -95,8 +95,19 @@ namespace CSharp_05_Hak.Models
         
         public int Threads
         {
-            get { return _process.Threads.Count; }
+            get { return _threads; }
+            set
+            {
+                _threads = value;
+                OnPropertyChanged();
+            }
         }
+
+        internal void UpdateThreads()
+        {
+            Threads = _process.Threads.Count;
+        }
+
         public string User
         {
             get

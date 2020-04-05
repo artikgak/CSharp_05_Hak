@@ -2,9 +2,7 @@
 {
     internal enum ViewType
     {
-        Main = 0,
-        Modules = 1,
-        Threads = 2
+        Main = 0
     }
     interface INavigationModel
     {

@@ -21,15 +21,16 @@
         </Grid.ColumnDefinitions>
         <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
             <MenuItem Header="Sort">
+                <MenuItem Header="Sort by Name" Command="{Binding SortByName}"></MenuItem>
                 <MenuItem Header="Sort by ID" Command="{Binding SortById}"></MenuItem>
-                <MenuItem Header="Sort by process name" Command="{Binding SortByName}"></MenuItem>
                 <MenuItem Header="Sort by IsActive" Command="{Binding SortByIsActive}"></MenuItem>
+                <MenuItem Header="Sort by RAM MB" Command="{Binding SortByRAMAmount}"></MenuItem>
+                <MenuItem Header="Sort by RAM %" Command="{Binding SortByRAMPercents}"></MenuItem>
                 <MenuItem Header="Sort by % of CPU" Command="{Binding SortByCPUPercents}"></MenuItem>
-                <MenuItem Header="Sort by RAM amount" Command="{Binding SortByRAMAmount}"></MenuItem>
-                <MenuItem Header="Sort by threads number" Command="{Binding SortByThreadsNumber}"></MenuItem>
-                <MenuItem Header="Sort by user" Command="{Binding SortByUser}"></MenuItem>
-                <MenuItem Header="Sort by filepath" Command="{Binding SortByFilepath}"></MenuItem>
-                <MenuItem Header="Sort by starting time" Command="{Binding SortByStartingTime}"></MenuItem>
+                <MenuItem Header="Sort by Threads" Command="{Binding SortByThreadsNumber}"></MenuItem>
+                <MenuItem Header="Sort by User" Command="{Binding SortByUser}"></MenuItem>
+                <MenuItem Header="Sort by Filepath" Command="{Binding SortByFilepath}"></MenuItem>
+                <MenuItem Header="Sort by Starting time" Command="{Binding SortByStartingTime}"></MenuItem>
             </MenuItem>
         </Menu>
         <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" 

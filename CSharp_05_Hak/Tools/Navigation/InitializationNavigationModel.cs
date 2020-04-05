@@ -14,12 +14,6 @@ namespace CSharp_05_Hak.Tools.Navigation
         {
             switch (viewType)
             {
-                case ViewType.Modules:
-                    ViewsDictionary.Add(viewType, new ModulesView());
-                    break;
-                case ViewType.Threads:
-                    ViewsDictionary.Add(viewType, new ThreadsView());
-                    break;
                 case ViewType.Main:
                     ViewsDictionary.Add(viewType, new TaskListView());
                     break;
