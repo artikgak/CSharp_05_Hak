@@ -28,12 +28,10 @@ namespace CSharp_05_Hak.ViewModels.TaskList
     internal class TaskListViewModel: BaseViewModel
     {
         private static SortType currentSort = SortType.Name;
-        private ObservableCollection<SingleProcess> _processes;
-        private Process[] _proc;
-
+        private SingleProcess[] _processes;
+        private System.Timers.Timer updateProcessParamsTimer;
         private SingleProcess _selectedProcess;
 
-        private Thread _threadUpdateProccesses;
         #region Commands
         #region Sort
         private RelayCommand<object> _sortById;
@@ -54,11 +52,12 @@ namespace CSharp_05_Hak.ViewModels.TaskList
         internal TaskListViewModel()
         {
             Process[] pr = Process.GetProcesses();
-            _processes = new ObservableCollection<SingleProcess>();
+            Array.Sort(pr,
+                                    delegate (Process x, Process y) { return x.ProcessName.CompareTo(y.ProcessName); });
+            Processes = new SingleProcess[pr.Length];
             for (int i = 0; i < pr.Length; ++i)
-                _processes.Add(new SingleProcess(pr[i]));
-            //StartWorkingThread();
-            System.Timers.Timer updateProcessParamsTimer = new System.Timers.Timer(); //list timer
+                Processes[i] = new SingleProcess(pr[i]);
+            updateProcessParamsTimer = new System.Timers.Timer(); //list timer
             updateProcessParamsTimer.Elapsed += UpdateProccesses;
             updateProcessParamsTimer.Interval = 2000;
             updateProcessParamsTimer.Enabled = true;
@@ -71,7 +70,6 @@ namespace CSharp_05_Hak.ViewModels.TaskList
         {
             get
             {
-                //_selectedProcess.
                 return _selectedProcess;
             }
             set
@@ -80,7 +78,7 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                 OnPropertyChanged();
             }
         }
-        public ObservableCollection<SingleProcess> Processes
+        public SingleProcess[] Processes
         {
             get { return _processes; }
             private set
@@ -90,6 +88,41 @@ namespace CSharp_05_Hak.ViewModels.TaskList
             }
         }
 
+        public RelayCommand<object> EndTask
+        {
+            get
+            {
+                return _endTask ?? (_endTask = new RelayCommand<object>(
+                           EndTaskImplementation, o => CanExecuteCommand()));
+            }
+        }
+
+        public RelayCommand<object> OpenFolder
+        {
+            get
+            {
+                return _openFolder ?? (_openFolder = new RelayCommand<object>(
+                           OpenFolderImplementation, o => CanExecuteCommand()));
+            }
+        }
+
+        //public RelayCommand<object> ShowThreads
+        //{
+        //    get
+        //    {
+        //        return _showThreads ?? (_showThreads = new RelayCommand<object>(
+        //                   ShowThreadsImplementation, o => CanExecuteCommand()));
+        //    }
+        //}
+
+        //public RelayCommand<object> ShowModules
+        //{
+        //    get
+        //    {
+        //        return _showModules ?? (_showModules = new RelayCommand<object>(
+        //                   ShowModulesImplementation, o => CanExecuteCommand()));
+        //    }
+        //}
 
         public RelayCommand<object> SortById
         {
@@ -169,15 +202,20 @@ namespace CSharp_05_Hak.ViewModels.TaskList
         private async void SortImplementation(object obj, SortType sortType)
         {
             currentSort = sortType;
+            //updateProcessParamsTimer.
+        }
+
+        private async void SortImplementation1(object obj, SortType sortType)
+        {
+            currentSort = sortType;
             await Task.Run(() =>
             {
                 IOrderedEnumerable<SingleProcess> sortedProccesses;
                 switch (sortType)
                 {
                     case SortType.CPUPercents:
-                        sortedProccesses = from u in _processes
-                                        orderby u.Name
-                                        select u;
+                        Array.Sort(Processes,
+                                    delegate (SingleProcess x, SingleProcess y) { return x.CPUPercents.CompareTo(y.CPUPercents); });
                         break;
                     case SortType.FilePath:
                         sortedProccesses = from u in _processes
@@ -185,9 +223,8 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                                         select u;
                         break;
                     case SortType.ID:
-                        sortedProccesses = from u in _processes
-                                        orderby u.ID
-                                        select u;
+                        Array.Sort(_processes,
+                                    delegate (SingleProcess x, SingleProcess y) { return x.ID.CompareTo(y.ID); });
                         break;
                     case SortType.IsActive:
                         sortedProccesses = from u in _processes
@@ -220,8 +257,6 @@ namespace CSharp_05_Hak.ViewModels.TaskList
                                         select u;
                         break;
                 }
-
-                Processes = new ObservableCollection<SingleProcess>(sortedProccesses);
             });
         }
 
@@ -229,11 +264,59 @@ namespace CSharp_05_Hak.ViewModels.TaskList
         private void UpdateProccesses(object sender, EventArgs timerArguments)
         {
             Process[] pr = Process.GetProcesses();
-            ObservableCollection <SingleProcess> toSet = new ObservableCollection<SingleProcess>();
+            switch (currentSort)
+            {
+                case SortType.Name:
+                    Array.Sort(pr, delegate (Process x, Process y) { return x.ProcessName.CompareTo(y.ProcessName); });
+                    break;
+                case SortType.ID:
+                Array.Sort(pr, delegate (Process x, Process y) { return x.Id.CompareTo(y.Id); });
+                break;
+
+                default:
+                break;
+            }
+            Processes = new SingleProcess[pr.Length];
             for (int i = 0; i < pr.Length; ++i)
-                toSet.Add(new SingleProcess(pr[i]));
-            Processes = toSet;
-            SortImplementation(new object(), currentSort);
+                Processes[i] = new SingleProcess(pr[i]);
+            //SortImplementation(new object(), currentSort);
         }
+
+        private async void EndTaskImplementation(object obj)
+        {
+            await Task.Run(() => {
+                if (_selectedProcess.checkAvailability())
+                {
+                    SelectedProcess?.ProcessItself?.Kill(); //_selectedProcess.ID
+                    //_processes.Remove(_selectedProcess);
+                    SelectedProcess = null;
+                    MessageBox.Show("Successfully deleted");
+                }
+                else
+                {
+                    MessageBox.Show("Have no access");
+                }
+            });
+        }
+
+        private void OpenFolderImplementation(object obj)
+        {
+            try
+            {
+                Process.Start("explorer.exe",
+                    _selectedProcess.DirectoryPath.Substring(0,
+                        _selectedProcess.DirectoryPath.LastIndexOf("\\", StringComparison.Ordinal)));
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error while accessing processing data");
+            }
+        }
+
+        private bool CanExecuteCommand()
+        {
+            return SelectedProcess != null;
+        }
+
     }
 }
